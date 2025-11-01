@@ -1,0 +1,67 @@
+body { 
+  font-family: 'Outfit', sans-serif;
+  margin: 0;
+  padding: 0;
+  background: linear-gradient(to right, #141e30, #243b55);
+  background-attachment: fixed;
+  color: white; 
+}
+
+.font-playfair {
+  font-family: 'Playfair', serif !important;
+}
+
+h1 {
+  height: auto;
+  color: #2563EB; 
+}
+
+.btn-primary-custom {
+  background-color: #dfd362; 
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 0.25rem;
+  cursor: pointer;
+}
+
+.btn-secondary-custom {
+  background-color: #FBBF24;
+  color: black;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 0.25rem;
+  cursor: pointer;
+}
+
+.navbar-sty {
+  padding: 0.5rem 1rem;   
+  margin-right: 1rem;     
+  font-size: 1.25rem;     
+  color: white;           
+  text-decoration: none;  
+  white-space: nowrap;    
+}
+
+.navbar-nav .nav-link:hover {
+  color: #FBBF24; 
+}
+
+.hero {
+  height: 100vh; 
+  background-image: url('/src/assets/HeroImg.jpg'); 
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  padding-left: 50px;
+  padding-right: 50px;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+
+.html{
+    scroll-behavior: smooth;
+}
