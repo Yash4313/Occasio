@@ -4,6 +4,7 @@ import { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
 import api from "../api/api";
 
+
 const Login = () => {
   const [identifier, setIdentifier] = useState(""); // username or email
   const [password, setPassword] = useState("");
@@ -20,7 +21,7 @@ const Login = () => {
     e.preventDefault();
     setError(null);
     if (!identifier || !password) {
-      setError("Please enter username/email and password");
+      setError("Please enter email and password");
       return;
     }
     
@@ -80,13 +81,13 @@ const Login = () => {
           {error && <div className="alert alert-danger">{error}</div>}
 
           <div className="mb-3">
-            <label className="form-label">Username or Email</label>
+            <label className="form-label"> Email</label>
             <input
               type="text"
               className="form-control"
               value={identifier}
               onChange={(e) => setIdentifier(e.target.value)}
-              placeholder="username or email"
+              placeholder="email"
             />
           </div>
 

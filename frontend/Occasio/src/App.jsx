@@ -76,8 +76,8 @@ const App = () => {
         <Route path="/contact" element={<> <Hero /> <AboutUs /> <Services /> <Pricing /> <Contact /> </>} />
 
         {/* Auth and protected routes */}
-  <Route path="/login" element={<Login />} />
-  <Route path="/login/otp" element={<OTPLogin />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/login/otp" element={<OTPLogin />} />
         <Route path="/register" element={<Register />} />
         <Route
           path="/profile"

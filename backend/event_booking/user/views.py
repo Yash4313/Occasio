@@ -164,12 +164,12 @@ class OTPRequestView(APIView):
             message = f"Your OTP code is: {otp}\nIt is valid for 5 minutes."
             from_email = getattr(settings, 'DEFAULT_FROM_EMAIL', None) or getattr(settings, 'EMAIL_HOST_USER', None)
             try:
-                # If email backend is configured this will send; in DEBUG most projects use console backend
+                # If email backend is configured this will send;
                 send_mail(subject, message, from_email, [target_email], fail_silently=True)
             except Exception:
                 logging.getLogger(__name__).exception("Failed to send OTP email")
-            logging.getLogger(__name__).info(f"OTP for email {target_email}: {otp}")
-            resp = {"detail": "OTP sent to email"}
+                logging.getLogger(__name__).info(f"OTP for email {target_email}: {otp}")
+                resp = {"detail": "OTP sent to email"}
         else:
             # For phone, production should integrate SMS provider. For now log it.
             logging.getLogger(__name__).info(f"OTP for phone {target_phone}: {otp}")
