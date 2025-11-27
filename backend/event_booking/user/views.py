@@ -6,14 +6,14 @@ from rest_framework.permissions import AllowAny
 from rest_framework_simplejwt.tokens import RefreshToken
 from .models import User
 from .serializers import UserSerializer,RegisterSerializer
-
+from django.template.loader import render_to_string
 # Allow login by username OR email by customizing the TokenObtainPair serializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from django.contrib.auth import get_user_model
 from django.core.cache import cache
 from django.conf import settings
-from django.core.mail import send_mail
+from django.core.mail import EmailMessage
 import random
 import logging
 from django.contrib.auth import authenticate
@@ -161,21 +161,26 @@ class OTPRequestView(APIView):
         # Send OTP via email if we have an email, otherwise log (SMS sending not implemented)
         if target_email:
             subject = "Your login OTP"
-            message = f"Your OTP code is: {otp}\nIt is valid for 5 minutes."
+            message = render_to_string('email/otp_email.html', {'otp': otp, 'user': user})
             from_email = getattr(settings, 'DEFAULT_FROM_EMAIL', None) or getattr(settings, 'EMAIL_HOST_USER', None)
+            # default response (assume success unless exception)
+            resp = {"detail": "OTP sent to email"}
             try:
                 # If email backend is configured this will send;
-                send_mail(subject, message, from_email, [target_email], fail_silently=True)
+                msg = EmailMessage(subject, message, from_email, [target_email])
+                msg.fail_silently = True
+                msg.content_subtype = "html"
+                msg.send()
             except Exception:
                 logging.getLogger(__name__).exception("Failed to send OTP email")
                 logging.getLogger(__name__).info(f"OTP for email {target_email}: {otp}")
-                resp = {"detail": "OTP sent to email"}
         else:
             # For phone, production should integrate SMS provider. For now log it.
             logging.getLogger(__name__).info(f"OTP for phone {target_phone}: {otp}")
             resp = {"detail": "OTP sent to phone"}
 
         if getattr(settings, 'DEBUG', False):
+            # include OTP in response only in debug mode
             resp['otp'] = otp
 
         return Response(resp, status=status.HTTP_200_OK)

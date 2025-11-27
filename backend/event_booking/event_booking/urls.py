@@ -20,7 +20,7 @@ from rest_framework import routers
 from user.views import UserViewSet,RegisterView,LogoutView,CustomTokenObtainPairView, OTPRequestView, OTPVerifyView
 from venue.views import VenueViewSet
 from rest_framework_simplejwt.views import (
-    TokenObtainPairView,
+    # TokenObtainPairView,
     TokenRefreshView,
 )
 from events.views import EventViewSet
