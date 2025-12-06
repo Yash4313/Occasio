@@ -1,0 +1,93 @@
+/* Register.css */
+
+/* General container */
+.container {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  color: #333;
+}
+
+/* Card styling */
+.card {
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  background: #fff;
+  transition: box-shadow 0.3s ease;
+}
+.card:hover {
+  box-shadow: 0 6px 18px rgba(103, 35, 69, 0.25);
+}
+
+/* Heading */
+h2 {
+  font-weight: 700;
+  color: #672345ff !important;
+  letter-spacing: 1px;
+}
+
+/* Labels */
+.form-label {
+  font-weight: 600;
+  color: #672345ff;
+}
+
+/* Inputs */
+.form-control {
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 10px;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+.form-control:focus {
+  border-color: #672345ff;
+  box-shadow: 0 0 6px rgba(103, 35, 69, 0.4);
+}
+
+/* Error messages */
+.form-text.text-danger {
+  font-size: 0.85rem;
+  color: #b00020;
+}
+
+/* Alert box */
+.alert-danger {
+  background-color: rgba(103, 35, 69, 0.1);
+  border: 1px solid #672345ff;
+  color: #672345ff;
+  border-radius: 8px;
+  font-weight: 500;
+}
+
+/* Password strength list */
+ul {
+  font-size: 0.85rem;
+}
+ul li {
+  margin: 2px 0;
+}
+
+/* Checkbox */
+.form-check-input:checked {
+  background-color: #672345ff;
+  border-color: #672345ff;
+}
+.form-check-label {
+  color: #444;
+}
+
+/* Button */
+.btn-success {
+  background-color: #672345ff;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  padding: 12px;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+.btn-success:hover {
+  background-color: #501a34;
+  transform: translateY(-2px);
+}
+.btn-success:disabled {
+  background-color: #a67c94;
+  cursor: not-allowed;
+}
