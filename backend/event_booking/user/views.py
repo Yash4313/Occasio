@@ -50,6 +50,25 @@ class RegisterView(APIView):
         serializer = RegisterSerializer(data=request.data)
         if serializer.is_valid():
             user = serializer.save()
+
+            # Send welcome email
+            try:
+                subject = "Welcome to Occasio!"
+                # You would create this template in your templates directory
+                message = render_to_string('email/registration_confirmation.html', {
+                    'user': user,
+                })
+                from_email = getattr(settings, 'DEFAULT_FROM_EMAIL', None) or getattr(settings, 'EMAIL_HOST_USER', None)
+                
+                if user.email and from_email:
+                    msg = EmailMessage(subject, message, from_email, [user.email])
+                    msg.content_subtype = "html"
+                    # msg.send(fail_silently=True) # Set to False to debug email sending issues
+                    msg.send(fail_silently=False) # Set to False to debug email sending issues
+            except Exception as e:
+                # Log the error if email sending fails
+                logging.getLogger(__name__).exception("Failed to send registration email")
+
             refresh = RefreshToken.for_user(user)
             return Response({
                 'user': UserSerializer(user).data,
