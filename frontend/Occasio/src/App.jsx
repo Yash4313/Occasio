@@ -84,6 +84,18 @@ const App = () => {
           element={<ProtectedRoute><Profile /></ProtectedRoute>}
         />
 
+         <Route path="/dashboard" element={<Dashboard/>}>
+          <Route path="personal" element={<PersonalInfo />} />
+          <Route path="bookings" element={<MyBookings />} />
+          <Route path="invoices" element={<Invoices />} />
+          <Route path="payments" element={<PaymentHistory />} />
+          <Route path="reviews" element={<Reviews />} />
+          <Route path="settings" element={<Settings />} />
+          <Route path="support" element={<SupportHelp />} />
+          <Route path="venues-listing" element={<VenueListingPage />} />
+          <Route path="venues" element={<VenuesPage/>}/>
+        </Route>
+
         <Route
           path="/admin"
           element={<RoleProtectedRoute roles={["admin"]}><Admin /></RoleProtectedRoute>}
