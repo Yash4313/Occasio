@@ -12,6 +12,16 @@ import Register from "./component/Register";
 import ProtectedRoute from "./component/ProtectedRoute";
 import Profile from "./component/Profile";
 import RoleProtectedRoute from "./component/RoleProtectedRoute";
+import PersonalInfo from "./components/PersonalInfo";
+import MyBookings from "./components/MyBookings";
+import Invoices from "./components/Invoices";
+import PaymentHistory from "./components/PaymentHistory";
+import Reviews from "./components/Reviews";
+import Settings from "./components/Settings";
+import SupportHelp from "./components/SupportHelp";
+import Dashboard from "./components/DashBoard";
+import VenueListingPage from "./components/VenueListingPage";
+import VenuesPage from "./components/VenuesPage";
 import Admin from "./component/Admin";
 
 const scrollToId = (id) => {
