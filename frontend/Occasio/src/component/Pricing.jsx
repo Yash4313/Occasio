@@ -3,7 +3,7 @@ import pricing from "../assets/pricing.jpg"; // Replace with your image
 
 const Pricing = () => {
   return (
-    <div className="container" style={{ fontSize: "22px", paddingLeft: "12px", textAlign: "center", }}>
+    <div id="pricing" className="container" style={{ fontSize: "22px", paddingLeft: "12px", textAlign: "center", }}>
             <h1
           style={{
             fontSize: "28px",
