@@ -1,4 +1,4 @@
-body {
+/* body {
       margin: 0;
       height: 100vh;
       display: flex;
@@ -7,7 +7,7 @@ body {
       background: linear-gradient(350deg,#0b0624 50%, #291e03 90%, #061519 100%);
       font-family: 'Poppins', sans-serif;
       color: #333;
-    }
+    } */
 
 .container {
   display: flex;
@@ -115,3 +115,14 @@ body {
   background:whitesmoke;
   color: black;
 }
+
+.fixed-img {
+  height: 250px;
+  width: 100%;
+  object-fit: cover;
+}
+
+.colo{
+  background-color:#672345ff
+}
+

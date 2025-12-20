@@ -25,7 +25,7 @@ const Navbar = () => {
               <Link className="nav-link" to="/">Home</Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" href="#AboutSection">About Us</Link>
+              <a className="nav-link" href="#AboutSection">About Us</a>
             </li>
 
             <li className="nav-item dropdown">
@@ -46,11 +46,11 @@ const Navbar = () => {
             </li>
 
             <li className="nav-item">
-              <Link className="nav-link" to="/pricing">Pricing</Link>
+              <a className="nav-link" href="#pricing">Pricing</a>
             </li>
     
             <li className="nav-item">
-              <Link className="nav-link" to="/contact">Contact</Link>
+              <a className="nav-link" href="#ContactSection">Contact</a>
             </li>
             {isAuthenticated && (
               <li className="nav-item">
