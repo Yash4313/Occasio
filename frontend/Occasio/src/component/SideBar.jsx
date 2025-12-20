@@ -1,10 +1,13 @@
 import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
 import ProPic from "../Assets/ProfilePIC.jpg";
+import { useContext } from "react";
+import { AuthContext } from "../context/AuthContext";
 
 function Sidebar() {
   const [isDark, setIsDark] = useState(false);
   const toggleTheme = () => setIsDark(!isDark);
+  const { user,logout } = useContext(AuthContext);
 
   const bgClass = isDark ? "bg-dark text-light" : "bg-light text-dark";
 
@@ -12,8 +15,8 @@ function Sidebar() {
     <div className={`d-flex flex-column p-4 vh-100 shadow ${bgClass}`} style={{ width: "280px" }}>
       <div className="text-center mb-4">
         <img src={ProPic} alt="Profile" className="rounded-circle shadow-sm border border-3 border-danger" style={{ width: "90px", height: "90px" }} />
-        <h5 className="mt-3 fw-bold">Raj Sinha</h5>
-        <p className="mb-2">shikhar123@gmail.com</p>
+        <h5 className="mt-3 fw-bold">{user?.username}</h5>
+        <p className="mb-2">{user?.email}</p>
         <button className="btn btn-outline-danger btn-sm rounded-pill">Edit Profile</button>
       </div>
 
@@ -34,7 +37,7 @@ function Sidebar() {
         <button className="btn btn-outline-dark btn-sm rounded-pill me-2" onClick={toggleTheme}>
           {isDark ? "☀ Light Mode" : "🌙 Dark Mode"}
         </button>
-        <button className="btn btn-danger btn-sm rounded-pill colo">Logout</button>
+        <button className="btn btn-danger btn-sm rounded-pill colo" onClick={logout} to="/">Logout</button>
       </div>
     </div>
   );

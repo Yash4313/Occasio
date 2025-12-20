@@ -1,5 +1,5 @@
 from rest_framework import viewsets
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from .models import Venue
 from .serializers import VenueSerializer
 from .permissions import IsAdminOrReadOnly  
@@ -7,7 +7,7 @@ from .permissions import IsAdminOrReadOnly
 class VenueViewSet(viewsets.ModelViewSet):
     queryset = Venue.objects.all()
     serializer_class = VenueSerializer
-    permission_classes = [IsAuthenticated, IsAdminOrReadOnly]
+    permission_classes = [IsAuthenticatedOrReadOnly, IsAdminOrReadOnly]
 
     def perform_create(self, serializer):
         #setting the user who created the venue

@@ -1,9 +1,12 @@
 import React, { useState } from "react";
+import { useContext } from "react";
+import { AuthContext } from "../context/AuthContext";
 
 const PersonalInfo = () => {
+  const { user } = useContext(AuthContext);
   const [formData, setFormData] = useState({
-    fullName: "Raj Sinha",
-    email: "sinha.raj123@gmail.com",
+    fullName: user?.username || "",
+    email: user?.email  || "",
     phone: "",
     address: "",
     city: "",

@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import { useContext } from "react";
+import { AuthContext } from "../context/AuthContext";
 
 import Img1 from "../assets/UserProImg1.jpg";
 import Img2 from "../assets/UserProImg2.jpg";
@@ -17,8 +19,7 @@ const HomePage = () => {
   const heroImages = [Img11, Img7, Img5, Img10, Img6, Img4, Img8, Img9];
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedVenue, setSelectedVenue] = useState(null);
-
-
+  const {  logout } = useContext(AuthContext);
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentIndex((prev) =>
@@ -73,7 +74,7 @@ const HomePage = () => {
                 </Link>
               </li>
               <li className="nav-item">
-                <Link className="nav-link text-warning fw-bold" to="/logout">
+                <Link className="nav-link text-warning fw-bold" onClick={logout} to="/">
                   Logout
                 </Link>
               </li>

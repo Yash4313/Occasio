@@ -58,7 +58,7 @@ const Login = () => {
       const res = await api.post("auth/otp/verify/", { identifier, code: otpCode });
       if (res?.data) {
         setAuth({ access: res.data.access, refresh: res.data.refresh, user: res.data.user });
-        navigate("/");
+        navigate("/user");
       }
     } catch (e) {
       const d = e?.response?.data;

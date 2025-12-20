@@ -24,7 +24,7 @@ from rest_framework_simplejwt.views import (
     TokenRefreshView,
 )
 from events.views import EventViewSet
-from bookings.views import BookingViewSet
+from bookings.views import BookingViewSet, VenueBookingViewSet
 from feedback.views import FeedbackViewSet
 
 
@@ -32,7 +32,8 @@ router = routers.DefaultRouter()
 router.register(r'users', UserViewSet)
 router.register(r'venues', VenueViewSet)
 router.register(r'events', EventViewSet)
-router.register(r'bookings', BookingViewSet)   
+router.register(r'bookings', BookingViewSet)
+router.register(r'venue-bookings', VenueBookingViewSet)   
 router.register(r'feedback', FeedbackViewSet, basename='feedback')   
 
 urlpatterns = [

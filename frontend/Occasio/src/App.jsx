@@ -47,7 +47,7 @@ const App = () => {
           element={<ProtectedRoute><Profile /></ProtectedRoute>}
         />
 
-        <Route path="/user" element={<HomePage/>}/>
+        <Route path="/user" element={<ProtectedRoute><HomePage/></ProtectedRoute>}/>
 
          <Route path="/dashboard" element={<Dashboard/>}>
           <Route index element={<PersonalInfo />} />
