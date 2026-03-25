@@ -49,9 +49,9 @@ const LandingPage = () => {
 
         <Hero />
         <AboutUs />
-              <Services />
-              <Pricing />
-              <Contact />
+        <Services />
+        <Pricing />
+        <Contact />
     </div>
     </>
   )

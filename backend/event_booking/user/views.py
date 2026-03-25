@@ -1,4 +1,4 @@
-from rest_framework import viewsets
+from rest_framework import viewsets,generics
 from rest_framework import status,permissions
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -43,8 +43,9 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
 class CustomTokenObtainPairView(TokenObtainPairView):
     serializer_class = CustomTokenObtainPairSerializer
 
-class RegisterView(APIView):
+class RegisterView( generics.CreateAPIView):
     permission_classes = [AllowAny]
+    serializer_class = RegisterSerializer
 
     def post(self, request, *args, **kwargs):
         serializer = RegisterSerializer(data=request.data)
