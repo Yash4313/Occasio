@@ -176,11 +176,11 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // periodically refresh access token (every 10 minutes) and when window gains focus
+  // periodically refresh access token (every 30 minutes) and when window gains focus
   useEffect(() => {
     const interval = setInterval(() => {
       if (refresh) refreshAccess();
-    }, 1000 * 60 * 10);
+    }, 1000 * 60 * 30);
 
     const onFocus = () => {
       if (refresh) refreshAccess();
