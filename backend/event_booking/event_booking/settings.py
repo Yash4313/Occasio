@@ -61,6 +61,7 @@ CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_HEADERS = [
     "authorization",
     "content-type",
+    "accept",
 ]
 
 REST_FRAMEWORK = {

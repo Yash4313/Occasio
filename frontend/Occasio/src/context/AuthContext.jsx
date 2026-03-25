@@ -9,21 +9,42 @@ export const AuthProvider = ({ children }) => {
   const navigate = useNavigate();
   const ui = useContext(UiContext);
   const refreshTimeoutRef = useRef(null);
+
   const [user, setUser] = useState(() => {
     try {
       const raw = localStorage.getItem("user");
       return raw ? JSON.parse(raw) : null;
-    } catch (e) {
+    } catch {
       return null;
     }
   });
+
   const [access, setAccess] = useState(() => localStorage.getItem("access") || null);
   const [refresh, setRefresh] = useState(() => localStorage.getItem("refresh") || null);
 
-  useEffect(() => {
-    // keep axios interceptor headers in sync (api already sets Authorization from localStorage on each request,
-    // but keeping in-memory state for quick checks)
-  }, [access]);
+  // ========================
+  // Helpers
+  // ========================
+
+  const decodeToken = (token) => {
+    try {
+      return JSON.parse(atob(token.split(".")[1]));
+    } catch {
+      return null;
+    }
+  };
+
+  const isTokenNearExpiry = (token) => {
+    const payload = decodeToken(token);
+    if (!payload?.exp) return false;
+
+    const now = Date.now() / 1000;
+    return payload.exp - now < 60; // less than 1 min
+  };
+
+  // ========================
+  // Auth Set / Clear
+  // ========================
 
   const setAuth = (data) => {
     if (data?.access) {
@@ -31,10 +52,12 @@ export const AuthProvider = ({ children }) => {
       setAccess(data.access);
       scheduleRefreshFromAccess(data.access);
     }
+
     if (data?.refresh) {
       localStorage.setItem("refresh", data.refresh);
       setRefresh(data.refresh);
     }
+
     if (data?.user) {
       localStorage.setItem("user", JSON.stringify(data.user));
       setUser(data.user);
@@ -45,15 +68,20 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem("access");
     localStorage.removeItem("refresh");
     localStorage.removeItem("user");
+
     setAccess(null);
     setRefresh(null);
     setUser(null);
-    // clear scheduled refresh if any
+
     if (refreshTimeoutRef.current) {
       clearTimeout(refreshTimeoutRef.current);
       refreshTimeoutRef.current = null;
     }
   };
+
+  // ========================
+  // Login / Register
+  // ========================
 
   const login = async ({ username, password }) => {
     const { showLoading, hideLoading, addToast } = ui;
@@ -73,11 +101,12 @@ export const AuthProvider = ({ children }) => {
 
   const register = async ({ username, email, password, password2, phone, role }) => {
     const { showLoading, hideLoading, addToast } = ui;
+
     const payload = { username, email, password };
-    // include confirm password if provided (backend expects `password2`)
     if (password2) payload.password2 = password2;
     if (phone) payload.phone = phone;
     if (role) payload.role = role;
+
     try {
       showLoading();
       const res = await api.post("auth/register/", payload);
@@ -92,27 +121,23 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  // ========================
+  // Logout
+  // ========================
+
   const logout = async () => {
     const { showLoading, hideLoading, addToast } = ui;
+
     try {
       showLoading();
 
-      // Try to refresh access first so the logout call has a valid Authorization header.
-      // If refresh fails, we still want to clear local state (user may already be expired) and not surface an error.
-      try {
-        await refreshAccess();
-      } catch (e) {
-        // ignore refresh errors here
-        console.warn("Refresh before logout failed", e);
-      }
-
       const token = refresh || localStorage.getItem("refresh");
+
       if (token) {
         try {
           await api.post("auth/logout/", { refresh: token });
         } catch (e) {
-          // backend logout failed (token invalid/expired) — treat as success from client perspective
-          console.warn("Logout endpoint error (ignored):", e?.response?.data || e.message || e);
+          console.warn("Logout API error (ignored)", e);
         }
       }
 
@@ -124,74 +149,82 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // Refresh access token using refresh token
+  // ========================
+  // Refresh Token
+  // ========================
+
   const refreshAccess = async () => {
-    const { showLoading, hideLoading, addToast } = ui;
     const token = refresh || localStorage.getItem("refresh");
     if (!token) return null;
+
     try {
-      showLoading();
       const res = await api.post("auth/token/refresh/", { refresh: token });
+
       if (res?.data?.access) {
         setAuth({ access: res.data.access });
         return res.data.access;
       }
     } catch (e) {
-      // refresh failed, clear auth
-      clearAuth();
-      addToast("Session expired", "warning");
+      console.warn("Refresh failed", e);
+
+      // Only logout if refresh token invalid
+      if (e?.response?.status === 401) {
+        clearAuth();
+        ui.addToast("Session expired", "warning");
+      }
+
       return null;
-    } finally {
-      hideLoading();
     }
   };
 
-  // Schedule refresh according to access token expiry (expires slightly before actual expiry)
+  // ========================
+  // Schedule Refresh
+  // ========================
+
   const scheduleRefreshFromAccess = (accessToken) => {
     if (!accessToken) return;
-    try {
-      // decode payload (base64) to read exp
-      const parts = accessToken.split('.');
-      if (parts.length < 2) return;
-      const payload = JSON.parse(atob(parts[1]));
-      const exp = payload.exp; // seconds since epoch
-      if (!exp) return;
 
-      const nowSec = Math.floor(Date.now() / 1000);
-      // schedule 30 seconds before expiry (or half of remaining time if short)
-      const secsUntilExp = exp - nowSec;
-      let scheduleIn = (secsUntilExp - 30) * 1000;
-      if (scheduleIn <= 0) scheduleIn = Math.max(5000, (secsUntilExp * 500));
+    const payload = decodeToken(accessToken);
+    if (!payload?.exp) return;
 
-      if (refreshTimeoutRef.current) clearTimeout(refreshTimeoutRef.current);
-      refreshTimeoutRef.current = setTimeout(async () => {
-        try {
-          await refreshAccess();
-        } catch (e) {
-          console.warn('scheduled refresh failed', e);
-        }
-      }, scheduleIn);
-    } catch (e) {
-      console.warn('scheduleRefreshFromAccess error', e);
+    const now = Date.now() / 1000;
+    const secsUntilExp = payload.exp - now;
+
+    if (secsUntilExp <= 0) return;
+
+    let scheduleIn = (secsUntilExp - 30) * 1000;
+    if (scheduleIn <= 0) scheduleIn = 5000;
+
+    if (refreshTimeoutRef.current) {
+      clearTimeout(refreshTimeoutRef.current);
     }
+
+    refreshTimeoutRef.current = setTimeout(async () => {
+      await refreshAccess();
+    }, scheduleIn);
   };
 
-  // periodically refresh access token (every 30 minutes) and when window gains focus
-  useEffect(() => {
-    const interval = setInterval(() => {
-      if (refresh) refreshAccess();
-    }, 1000 * 60 * 30);
+  // ========================
+  // On Focus Refresh (SAFE)
+  // ========================
 
+  useEffect(() => {
     const onFocus = () => {
-      if (refresh) refreshAccess();
+      if (refresh && access && isTokenNearExpiry(access)) {
+        refreshAccess();
+      }
     };
 
     window.addEventListener("focus", onFocus);
+
     return () => {
-      clearInterval(interval);
       window.removeEventListener("focus", onFocus);
     };
-  }, [refresh]);
+  }, [refresh, access]);
+
+  // ========================
+  // Context Value
+  // ========================
 
   const value = {
     user,
