@@ -61,7 +61,7 @@ export default function CustomVenueBookingForm({
       } else {
         setError(
           err.response?.data?.detail ||
-            "Failed to create booking. Please try again."
+            "Failed to create booking. Please try again.",
         );
       }
       console.error("Booking error:", err);

@@ -7,10 +7,10 @@ class BookingSerializer(serializers.ModelSerializer):
         fields = '__all__'
         read_only_fields = ['user', 'total_price', 'booking_date']
     
-    def validate_purpose(self, value):
-        if not value:
-            raise serializers.ValidationError("Purpose is required.")
-        return value
+    # def validate_purpose(self, value):
+    #     if not value:
+    #         raise serializers.ValidationError("Purpose is required.")
+    #     return value
 
 
 class VenueBookingSerializer(serializers.ModelSerializer):
