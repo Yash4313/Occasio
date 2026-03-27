@@ -11,13 +11,13 @@ class Booking(models.Model):
         ('cancelled', 'Cancelled'),
     ]
     
-    PURPOSE_CHOICES = [
-        ('wedding', 'Wedding'),
-        ('birthday', 'Birthday'),
-        ('corporate', 'Corporate Event'),
-        ('party', 'Party'),
-        ('other', 'Other'),
-    ]
+    # PURPOSE_CHOICES = [
+    #     ('wedding', 'Wedding'),
+    #     ('birthday', 'Birthday'),
+    #     ('corporate', 'Corporate Event'),
+    #     ('party', 'Party'),
+    #     ('other', 'Other'),
+    # ]
     
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='bookings')
     event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name='bookings')
@@ -25,7 +25,7 @@ class Booking(models.Model):
     booking_date = models.DateTimeField(auto_now_add=True)
     total_price = models.DecimalField(max_digits=10, decimal_places=2)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
-    purpose = models.CharField(max_length=50, choices=PURPOSE_CHOICES, default='other')
+    # purpose = models.CharField(max_length=50, choices=PURPOSE_CHOICES, default='other')
 
     def save(self, *args, **kwargs):
         # Automatically calculate total price based on event price × tickets

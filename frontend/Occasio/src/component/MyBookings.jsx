@@ -117,13 +117,13 @@ function MyBookings() {
                   <li className="mb-2">
                     <strong>Tickets:</strong> {booking.num_tickets}
                   </li>
-                  {booking.purpose && (
+                  {/* {booking.purpose && (
                     <li className="mb-2">
                       <strong>Purpose:</strong>{" "}
                       {booking.purpose.charAt(0).toUpperCase() +
                         booking.purpose.slice(1)}
                     </li>
-                  )}
+                  )} */}
                 </>
               )}
               <li className="mb-2">

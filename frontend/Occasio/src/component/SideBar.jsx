@@ -28,7 +28,8 @@ function Sidebar() {
           <li><NavLink to="/dashboard/payments" className="nav-link">Payment History</NavLink></li>
           <li><NavLink to="/dashboard/reviews" className="nav-link">Reviews</NavLink></li>
           <li><NavLink to="/dashboard/settings" className="nav-link">Settings</NavLink></li>
-          <li><NavLink to="/dashboard/venues-listing" className="nav-link">Venue List</NavLink></li>
+          <li><NavLink to="/dashboard/venues" className="nav-link">Venue List</NavLink></li>
+          <li><NavLink to="/dashboard/event-listing" className="nav-link">Event List</NavLink></li>
           <li><NavLink to="/dashboard/support" className="nav-link">Support / Help</NavLink></li>
         </ul>
       </nav>

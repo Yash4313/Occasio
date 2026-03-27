@@ -15,32 +15,46 @@ if not admin_user:
 # Add dummy venues
 venues_data = [
     {
-        'name': 'Elegant Guest House',
-        'location': '123 Wedding Lane, Kanpur, India',
-        'capacity': 500,
-        'price': 50000,
-        'description': 'Perfect for weddings and large celebrations. Spacious halls, catering services, and elegant décor.'
+        'name': 'Ramada',
+        'location': 'Gomti Nagar, Lucknow',
+        'capacity': 350,
+        'price': 40000,
+        'description': 'Perfect for weddings and large celebrations with elegant décoration.'
     },
     {
-        'name': 'Business Conference Hall',
-        'location': '45 Corporate Street, Kanpur, India',
+        'name': 'Garden Galaxy',
+        'location': 'Hazratganj, Lucknow',
+        'capacity': 200,
+        'price': 25000,
+        'description': 'Open-air charm for intimate gatherings, surrounded by greenery and fresh vibes.'
+    },
+    {
+        'name': 'Moon & Mars',
+        'location': 'Indira Nagar, Lucknow',
+        'capacity': 250,
+        'price': 32000,
+        'description': 'Stylish space for cocktail parties and receptions with modern interiors.'
+    },
+    {
+        'name': 'Royal Orchid Banquet',
+        'location': 'Gomti Nagar, Lucknow',
+        'capacity': 300,
+        'price': 45000,
+        'description': 'Luxury indoor hall perfect for corporate events and weddings with premium facilities.'
+    },
+    {
+        'name': 'Sunset View Lawn',
+        'location': 'Hazratganj, Lucknow',
         'capacity': 200,
         'price': 30000,
-        'description': 'Ideal for meetings, conferences, and corporate events. Equipped with projectors and conference rooms.'
+        'description': 'Beautiful open-air lawn ideal for receptions and birthday parties with sunset views.'
     },
     {
-        'name': 'Premium Guest House',
-        'location': '78 Premium Road, Kanpur, India',
-        'capacity': 300,
+        'name': 'Imperial Grand Hall',
+        'location': 'Indira Nagar, Lucknow',
+        'capacity': 500,
         'price': 70000,
-        'description': 'Versatile space for weddings and meetings. Luxury interiors and customizable packages.'
-    },
-    {
-        'name': 'Riverside Banquet Hall',
-        'location': '99 River View, Kanpur, India',
-        'capacity': 400,
-        'price': 60000,
-        'description': 'Beautiful venue with riverside views. Perfect for ceremonies and celebrations.'
+        'description': 'Premium grand hall for luxury events, concerts, and big functions with world-class amenities.'
     },
 ]
 

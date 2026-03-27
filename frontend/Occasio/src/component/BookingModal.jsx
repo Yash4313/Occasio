@@ -6,16 +6,8 @@ import UiContext from "../context/UiContext";
 function BookingModal({ show, onClose, event, onBookingSuccess }) {
   const ui = useContext(UiContext);
   const [numTickets, setNumTickets] = useState(1);
-  const [purpose, setPurpose] = useState('');
+  // const [purpose, setPurpose] = useState('');
   const [loading, setLoading] = useState(false);
-
-  const purposeOptions = [
-    { value: 'wedding', label: 'Wedding' },
-    { value: 'birthday', label: 'Birthday' },
-    { value: 'corporate', label: 'Corporate Event' },
-    { value: 'party', label: 'Party' },
-    { value: 'other', label: 'Other' },
-  ];
 
   const handleBooking = async (e) => {
     e.preventDefault();
@@ -25,7 +17,7 @@ function BookingModal({ show, onClose, event, onBookingSuccess }) {
       const bookingData = {
         event: event.id,
         num_tickets: parseInt(numTickets, 10),
-        purpose: purpose,
+        
       };
 
       await bookingService.createBooking(bookingData);
@@ -33,7 +25,7 @@ function BookingModal({ show, onClose, event, onBookingSuccess }) {
       onBookingSuccess?.();
       onClose();
       setNumTickets(1);
-      setPurpose('');
+      
     } catch (err) {
       ui?.addToast?.(err.error || "Failed to create booking", "error");
       console.error("Booking error:", err);
@@ -101,23 +93,6 @@ function BookingModal({ show, onClose, event, onBookingSuccess }) {
             <Form.Text className="text-muted">
               Available capacity: {event?.capacity || "N/A"}
             </Form.Text>
-          </Form.Group>
-
-          <Form.Group className="mb-3">
-            <Form.Label className="fw-bold">Purpose of Booking *</Form.Label>
-            <Form.Select
-              value={purpose}
-              onChange={(e) => setPurpose(e.target.value)}
-              disabled={loading}
-              required
-            >
-              <option value="">Select a purpose...</option>
-              {purposeOptions.map((opt) => (
-                <option key={opt.value} value={opt.value}>
-                  {opt.label}
-                </option>
-              ))}
-            </Form.Select>
           </Form.Group>
 
           <Form.Group className="mb-3">

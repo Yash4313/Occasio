@@ -20,7 +20,7 @@ import Reviews from "./component/Reviews";
 import Settings from "./component/Settings";
 import SupportHelp from "./component/SupportHelp";
 import Dashboard from "./component/DashBoard";
-import VenueListingPage from "./component/VenueListingPage";
+import EventListingPage from "./component/EventListingPage";
 import VenuesPage from "./component/VenuesPage";
 import Admin from "./component/Admin";
 import LandingPage from "./component/LandingPage";
@@ -58,7 +58,7 @@ const App = () => {
           <Route path="reviews" element={<Reviews />} />
           <Route path="settings" element={<Settings />} />
           <Route path="support" element={<SupportHelp />} />
-          <Route path="venues-listing" element={<VenueListingPage />} />
+          <Route path="event-listing" element={<EventListingPage />} />
           <Route path="venues" element={<VenuesPage/>}/>
         </Route>
 

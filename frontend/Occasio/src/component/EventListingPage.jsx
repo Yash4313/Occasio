@@ -86,7 +86,7 @@ export default function VenueListingPage() {
     <Container className="my-5">
       {/* Hero Section */}
       <div className="text-center mb-5">
-        <h1>Venue Listings</h1>
+        <h1>Event Listings</h1>
         <p>Explore all available events and venues with details on price, capacity, and dates.</p>
       </div>
 

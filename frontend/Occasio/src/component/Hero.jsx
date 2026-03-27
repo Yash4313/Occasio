@@ -8,8 +8,8 @@ const Hero = () => {
         <p className="display-6 lead mt-4 fw-bold text-white" style={{ textShadow: "1px 1px 3px rgba(0,0,0,0.5)" }}>
           Make your events memorable with our services
         </p>
-        <Link to="/services" className="btn btn- btn-dark btn-lg mt-4">
-          Explore Services
+        <Link to="/user" className="btn btn- btn-dark btn-lg mt-4">
+          Book Now
         </Link>
       </div>
     </div>
