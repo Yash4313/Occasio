@@ -2,9 +2,9 @@
   font-family: 'Outfit', sans-serif;
   margin: 0;
   padding: 0;
-  background: linear-gradient(to right, #141e30, #243b55);
+  background: "linear-gradient(to right, #f8f9fa, #e9ecef)";
   background-attachment: fixed;
-  color: white; 
+  color: #ffffff; 
 }
 
 .font-playfair {

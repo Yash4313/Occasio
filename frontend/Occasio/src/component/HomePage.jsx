@@ -199,7 +199,7 @@ const HomePage = () => {
                 <p className="mb-2"><strong>📍 Location:</strong> {venue.location}</p>
                 <p className="mb-2"><strong>📅 Availability:</strong> {venue.availability}</p>
 
-                <Link to="/dashboard/bookings" className="btn btn-danger w-100 mt-3 fw-bold">
+                <Link to="/dashboard/venues" className="btn btn-danger w-100 mt-3 fw-bold">
                   🚀 Book Now
                 </Link>
               </div>
