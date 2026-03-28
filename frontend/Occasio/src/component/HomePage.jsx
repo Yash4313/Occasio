@@ -13,13 +13,24 @@ import Img8 from "../assets/HeroPic5.jpg";
 import Img9 from "../assets/HeroPic6.jpg";
 import Img10 from "../assets/HeroPic7.jpg";
 import Img11 from "../assets/HeroPic8.jpg";
-import { Link } from "react-router-dom"; 
+import { Link } from "react-router-dom";
+import axios from "axios"; 
 
 const HomePage = () => {
   const heroImages = [Img11, Img7, Img5, Img10, Img6, Img4, Img8, Img9];
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedVenue, setSelectedVenue] = useState(null);
-  const {  logout } = useContext(AuthContext);
+  const { logout, access } = useContext(AuthContext);
+  const [venues, setVenues] = useState([]);
+  const [formData, setFormData] = useState({
+    title: '',
+    description: '',
+    date: '',
+    time: '',
+    venue: '',
+    capacity: '',
+    price: ''
+  });
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentIndex((prev) =>
@@ -28,6 +39,54 @@ const HomePage = () => {
     }, 3000);
     return () => clearInterval(interval);
   }, []);
+
+  useEffect(() => {
+    const fetchVenues = async () => {
+      try {
+        const response = await axios.get('http://localhost:8000/api/venues/', {
+          headers: {
+            Authorization: `Bearer ${access}`
+          }
+        });
+        setVenues(response.data);
+      } catch (error) {
+        console.error('Error fetching venues:', error);
+      }
+    };
+    if (access) {
+      fetchVenues();
+    }
+  }, [access]);
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post('http://localhost:8000/api/events/', formData, {
+        headers: {
+          Authorization: `Bearer ${access}`,
+          'Content-Type': 'application/json'
+        }
+      });
+      alert('Event created successfully!');
+      setFormData({
+        title: '',
+        description: '',
+        date: '',
+        time: '',
+        venue: '',
+        capacity: '',
+        price: ''
+      });
+    } catch (error) {
+      console.error('Error creating event:', error);
+      alert('Failed to create event. Please try again.');
+    }
+  };
 
   return (
     <div className="BGC">
@@ -214,42 +273,96 @@ const HomePage = () => {
       <section id="booking" className="bg-light py-5">
         <div className="container">
           <h2 className="text-center mb-4 fw-bold text-danger">
-            Book Your Event
+            Create Your Event
           </h2>
-          <form className="mx-auto" style={{ maxWidth: "600px" }}>
+          <form className="mx-auto" style={{ maxWidth: "600px" }} onSubmit={handleSubmit}>
             <div className="mb-3">
-              <label className="form-label">Full Name</label>
+              <label className="form-label">Event Title</label>
               <input
                 type="text"
+                name="title"
                 className="form-control"
-                placeholder="Enter your name"
+                placeholder="Enter event title"
+                value={formData.title}
+                onChange={handleInputChange}
+                required
               />
             </div>
             <div className="mb-3">
-              <label className="form-label">Email</label>
-              <input
-                type="email"
+              <label className="form-label">Description</label>
+              <textarea
+                name="description"
                 className="form-control"
-                placeholder="Enter your email"
+                placeholder="Enter event description"
+                value={formData.description}
+                onChange={handleInputChange}
+                required
               />
             </div>
             <div className="mb-3">
               <label className="form-label">Event Date</label>
-              <input type="date" className="form-control" />
+              <input
+                type="date"
+                name="date"
+                className="form-control"
+                value={formData.date}
+                onChange={handleInputChange}
+                required
+              />
+            </div>
+            <div className="mb-3">
+              <label className="form-label">Event Time</label>
+              <input
+                type="time"
+                name="time"
+                className="form-control"
+                value={formData.time}
+                onChange={handleInputChange}
+                required
+              />
             </div>
             <div className="mb-3">
               <label className="form-label">Select Venue</label>
-              <select className="form-select">
-                <option>Ramada</option>
-                <option>Royal Orchid Banquet</option>
-                <option>Imperial Grand Hall</option>
-                <option>Garden Galaxy</option>
-                <option>Moon & Mars</option>
-                <option>Garden Galaxy</option>
+              <select
+                name="venue"
+                className="form-select"
+                value={formData.venue}
+                onChange={handleInputChange}
+                required
+              >
+                <option value="">Select a venue</option>
+                {venues.map(venue => (
+                  <option key={venue.id} value={venue.id}>{venue.name}</option>
+                ))}
               </select>
             </div>
+            <div className="mb-3">
+              <label className="form-label">Capacity</label>
+              <input
+                type="number"
+                name="capacity"
+                className="form-control"
+                placeholder="Enter capacity"
+                value={formData.capacity}
+                onChange={handleInputChange}
+                required
+              />
+            </div>
+            <div className="mb-3">
+              <label className="form-label">Price</label>
+              <input
+                type="number"
+                name="price"
+                step="0.01"
+                className="form-control"
+                placeholder="Enter price"
+                value={formData.price}
+                onChange={handleInputChange}
+                required
+              />
+            </div>
             <button type="submit" className="btn btn-danger w-100 colo">
-              Submit Booking
+              Create Event
             </button>
           </form>
         </div>
