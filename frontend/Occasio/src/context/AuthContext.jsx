@@ -89,6 +89,7 @@ export const AuthProvider = ({ children }) => {
       showLoading();
       const res = await api.post("auth/login/", { username, password });
       setAuth(res.data);
+      console.log("Login successful:", res.data);
       addToast("Logged in", "success");
       return res.data;
     } catch (e) {

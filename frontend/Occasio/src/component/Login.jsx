@@ -1,68 +1,238 @@
-import React, { useState } from "react";
+// import React, { useState } from "react";
+// import { useNavigate } from "react-router-dom";
+// import { useContext } from "react";
+// import { AuthContext } from "../context/AuthContext";
+// import api from "../api/api";
+// import "./Login.css"; // ✅ Use Login-specific CSS
+
+// const Login = () => {
+//   const [identifier, setIdentifier] = useState(""); // username or email
+//   const [password, setPassword] = useState("");
+//   const [loading, setLoading] = useState(false);
+//   const [error, setError] = useState(null);
+//   const navigate = useNavigate();
+//   const { login, setAuth } = useContext(AuthContext);
+//   const [otpStep, setOtpStep] = React.useState(0); // 0 = not requested, 1 = requested
+//   const [otpCode, setOtpCode] = React.useState("");
+//   const [otpLoading, setOtpLoading] = React.useState(false);
+//   const [otpMsg, setOtpMsg] = React.useState(null);
+
+//   const handleSubmit = async (e) => {
+//     e.preventDefault();
+//     setError(null);
+//     if (!identifier || !password) {
+//       setError("Please enter email and password");
+//       return;
+//     }
+
+//     try {
+//       setLoading(true);
+//       const payload = { identifier, password };
+//       const res = await api.post("auth/otp/request/", payload);
+//       setOtpMsg("OTP sent to your registered email/phone");
+//       setOtpStep(1);
+//     } catch (err) {
+//       console.error(err);
+//       const responseData = err?.response?.data;
+//       let errorMsg = "Invalid credentials";
+//       if (responseData) {
+//         if (typeof responseData === "object" && responseData.detail) {
+//           errorMsg = responseData.detail;
+//         } else if (typeof responseData === "string") {
+//           errorMsg = responseData;
+//         }
+//       } else if (err.message) {
+//         errorMsg = err.message;
+//       }
+//       setError(errorMsg);
+//     } finally {
+//       setLoading(false);
+//     }
+//   };
+
+//   const verifyOtp = async () => {
+//     setError(null);
+//     if (!identifier || !otpCode) return setError("Please enter identifier and OTP");
+//     try {
+//       setOtpLoading(true);
+//       const res = await api.post("auth/otp/verify/", { identifier, code: otpCode });
+//       if (res?.data) {
+//         setAuth({ access: res.data.access, refresh: res.data.refresh, user: res.data.user });
+//         navigate("/user");
+//       }
+//     } catch (e) {
+//       const d = e?.response?.data;
+//       setError(d?.detail || (typeof d === "string" ? d : "Invalid OTP"));
+//     } finally {
+//       setOtpLoading(false);
+//     }
+//   };
+
+//   return (
+//     <div className="login-container">
+//       <div className="login-card">
+//         <h2 className="login-title">Login</h2>
+//         <form onSubmit={handleSubmit}>
+//           {error && <div className="login-alert error">{error}</div>}
+
+//           <div className="form-group">
+//             <label className="form-label">Email</label>
+//             <input
+//               type="text"
+//               className="form-input"
+//               value={identifier}
+//               onChange={(e) => setIdentifier(e.target.value)}
+//               placeholder="email"
+//             />
+//           </div>
+
+//           <div className="form-group">
+//             <label className="form-label">Password</label>
+//             <input
+//               type="password"
+//               className="form-input"
+//               value={password}
+//               onChange={(e) => setPassword(e.target.value)}
+//               placeholder="Enter your password"
+//             />
+//           </div>
+
+//           {otpStep === 0 ? (
+//             <button type="submit" className="btn-primary" disabled={loading}>
+//               {loading ? "Verifying credentials..." : "Login"}
+//             </button>
+//           ) : (
+//             <div className="otp-section">
+//               {otpMsg && <div className="login-alert info">{otpMsg}</div>}
+//               <div className="form-group">
+//                 <label className="form-label">Enter OTP</label>
+//                 <input
+//                   type="text"
+//                   className="form-input"
+//                   value={otpCode}
+//                   onChange={(e) => setOtpCode(e.target.value)}
+//                   placeholder="123456"
+//                 />
+//               </div>
+//               <button
+//                 type="button"
+//                 className="btn-success"
+//                 onClick={verifyOtp}
+//                 disabled={otpLoading}
+//               >
+//                 {otpLoading ? "Verifying..." : "Verify & Login"}
+//               </button>
+//             </div>
+//           )}
+//         </form>
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default Login;
+
+import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
 import api from "../api/api";
-import "./Login.css"; // ✅ Use Login-specific CSS
+import "./Login.css";
 
 const Login = () => {
-  const [identifier, setIdentifier] = useState(""); // username or email
-  const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const navigate = useNavigate();
-  const { login, setAuth } = useContext(AuthContext);
-  const [otpStep, setOtpStep] = React.useState(0); // 0 = not requested, 1 = requested
-  const [otpCode, setOtpCode] = React.useState("");
-  const [otpLoading, setOtpLoading] = React.useState(false);
-  const [otpMsg, setOtpMsg] = React.useState(null);
+  const [role, setRole] = useState("user"); // NEW
 
+  const [identifier, setIdentifier] = useState("");
+  const [password, setPassword] = useState("");
+
+  const [otpStep, setOtpStep] = useState(0);
+  const [otpCode, setOtpCode] = useState("");
+
+  const [loading, setLoading] = useState(false);
+  const [otpLoading, setOtpLoading] = useState(false);
+
+  const [error, setError] = useState(null);
+  const [otpMsg, setOtpMsg] = useState(null);
+
+  const { setAuth } = useContext(AuthContext);
+  const navigate = useNavigate();
+
+  // ======================
+  // STEP 1: LOGIN / OTP REQUEST
+  // ======================
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError(null);
+
     if (!identifier || !password) {
-      setError("Please enter email and password");
+      setError("Please enter all fields");
       return;
     }
 
     try {
       setLoading(true);
-      const payload = { identifier, password };
-      const res = await api.post("auth/otp/request/", payload);
-      setOtpMsg("OTP sent to your registered email/phone");
-      setOtpStep(1);
-    } catch (err) {
-      console.error(err);
-      const responseData = err?.response?.data;
-      let errorMsg = "Invalid credentials";
-      if (responseData) {
-        if (typeof responseData === "object" && responseData.detail) {
-          errorMsg = responseData.detail;
-        } else if (typeof responseData === "string") {
-          errorMsg = responseData;
-        }
-      } else if (err.message) {
-        errorMsg = err.message;
+
+      const res = await api.post("auth/otp/request/", {
+        identifier,
+        password,
+        role,
+      });
+
+      // 🔥 VENDOR → DIRECT LOGIN
+      if (res.data?.role === "vendor") {
+        setAuth({
+          access: res.data.access,
+          refresh: res.data.refresh,
+          user: res.data.user,
+        });
+
+        navigate("/vendor");
+        return;
       }
-      setError(errorMsg);
+
+      // 🔥 USER → OTP FLOW
+      setOtpMsg("OTP sent to your registered email");
+      setOtpStep(1);
+
+    } catch (err) {
+      const d = err?.response?.data;
+      setError(d?.detail || "Login failed");
     } finally {
       setLoading(false);
     }
   };
 
+  // ======================
+  // STEP 2: VERIFY OTP (USER ONLY)
+  // ======================
   const verifyOtp = async () => {
     setError(null);
-    if (!identifier || !otpCode) return setError("Please enter identifier and OTP");
+
+    if (!otpCode) {
+      setError("Please enter OTP");
+      return;
+    }
+
     try {
       setOtpLoading(true);
-      const res = await api.post("auth/otp/verify/", { identifier, code: otpCode });
+
+      const res = await api.post("auth/otp/verify/", {
+        identifier,
+        code: otpCode,
+      });
+
       if (res?.data) {
-        setAuth({ access: res.data.access, refresh: res.data.refresh, user: res.data.user });
+        setAuth({
+          access: res.data.access,
+          refresh: res.data.refresh,
+          user: res.data.user,
+        });
+
         navigate("/user");
       }
-    } catch (e) {
-      const d = e?.response?.data;
-      setError(d?.detail || (typeof d === "string" ? d : "Invalid OTP"));
+
+    } catch (err) {
+      const d = err?.response?.data;
+      setError(d?.detail || "Invalid OTP");
     } finally {
       setOtpLoading(false);
     }
@@ -72,20 +242,56 @@ const Login = () => {
     <div className="login-container">
       <div className="login-card">
         <h2 className="login-title">Login</h2>
+
         <form onSubmit={handleSubmit}>
           {error && <div className="login-alert error">{error}</div>}
 
+          {/* ROLE SELECTION */}
           <div className="form-group">
-            <label className="form-label">Email</label>
+            <label className="form-label">Login as:</label>
+            <div className="role-options">
+              <label style={{ marginRight: "20px" }}>
+                <input
+                  type="radio"
+                  value="user"
+                  checked={role === "user"}
+                  onChange={(e) => setRole(e.target.value)}
+                />
+                User
+              </label>
+
+              <label>
+                <input
+                  type="radio"
+                  value="vendor"
+                  checked={role === "vendor"}
+                  onChange={(e) => setRole(e.target.value)}
+                />
+                Vendor
+              </label>
+            </div>
+          </div>
+
+          {/* IDENTIFIER */}
+          <div className="form-group">
+            <label className="form-label">
+              {role === "vendor" ? "Vendor ID" : "Email"}
+            </label>
+
             <input
               type="text"
               className="form-input"
               value={identifier}
               onChange={(e) => setIdentifier(e.target.value)}
-              placeholder="email"
+              placeholder={
+                role === "vendor"
+                  ? "Enter Vendor ID (e.g. UPKNP3456)"
+                  : "Enter your email"
+              }
             />
           </div>
 
+          {/* PASSWORD */}
           <div className="form-group">
             <label className="form-label">Password</label>
             <input
@@ -97,13 +303,16 @@ const Login = () => {
             />
           </div>
 
+          {/* STEP 1: LOGIN BUTTON */}
           {otpStep === 0 ? (
             <button type="submit" className="btn-primary" disabled={loading}>
-              {loading ? "Verifying credentials..." : "Login"}
+              {loading ? "Checking..." : "Login"}
             </button>
           ) : (
+            /* STEP 2: OTP SECTION */
             <div className="otp-section">
               {otpMsg && <div className="login-alert info">{otpMsg}</div>}
+
               <div className="form-group">
                 <label className="form-label">Enter OTP</label>
                 <input
@@ -114,6 +323,7 @@ const Login = () => {
                   placeholder="123456"
                 />
               </div>
+
               <button
                 type="button"
                 className="btn-success"
