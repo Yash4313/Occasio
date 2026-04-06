@@ -169,7 +169,7 @@ const HomePage = () => {
       {/* Venue Highlights */}
 <section className="container my-5">
   <h2 className="text-center mb-4 fw-bold text-danger">
-    ✨ Our Popular Venues ✨
+    ✨ Our Popular Venues ✨ha t
   </h2>
 
   {/* Selected venue state */}

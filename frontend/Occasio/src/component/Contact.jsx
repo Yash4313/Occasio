@@ -180,11 +180,11 @@ const Contact = () => {
         <div className="row align-items-center g-4">
           {/* Left Side */}
           <div className="col-md-6">
-            <h2
+            <h3
               style={{ fontWeight: "600", marginBottom: "15px", color: "#ddd" }}
             >
               Get in Touch
-            </h2>
+            </h3>
 
             <p style={{ color: "#ddd", maxWidth: "400px" }}>
               Have questions or need help planning? Send us a message and our

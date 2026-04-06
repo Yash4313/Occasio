@@ -7,26 +7,34 @@ class RegisterSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['id', 'username', 'email', 'password', 'password2', 'phone', 'role']
-
-    def create(self, validated_data):
-        # Remove password2 from validated_data before creating user
-        validated_data.pop('password2', None)
-        password = validated_data.pop('password')
-        user = User.objects.create_user(**validated_data)
-        user.set_password(password)
-        user.save()
-        return user
+        fields = [
+            'id', 'username', 'email', 'password', 'password2',
+            'phone', 'role', 'shop_name', 'city', 'state'
+        ]
 
     def validate(self, attrs):
-        # ensure password and password2 match
         if attrs.get('password') != attrs.get('password2'):
             raise serializers.ValidationError({
                 'password': "Password fields didn't match.",
             })
         return attrs
 
+    def create(self, validated_data):
+        validated_data.pop('password2')
+        password = validated_data.pop('password')
+
+        user = User(**validated_data)
+        user.set_password(password)
+        user.save()
+
+        return user
+
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['id', 'username', 'email', 'phone', 'role']
+
+class VendorSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = [ 'id','role','username', 'email', 'phone', "vendor_id", 'sh op_name', 'city', 'state']
